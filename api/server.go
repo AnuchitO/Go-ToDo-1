@@ -18,11 +18,20 @@ func StartServer(url string) {
 }
 
 func getTodos(c *gin.Context) {
-	c.JSON(200, database.Todos())
+	if todos, err := database.Todos(); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	} else {
+		c.JSON(200, todos)
+	}
+
 }
 
 func getTodo(c *gin.Context) {
-	c.JSON(200, database.Todo(c.Param("id")))
+	if todo, err := database.Todo(c.Param("id")); err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	} else {
+		c.JSON(200, todo)
+	}
 }
 
 func postTodo(c *gin.Context) {
